@@ -1,0 +1,46 @@
+#sudo apt-get install git
+#git --version
+#git config --global user.name “Valentyna Zhuk”
+#git config --global user.email “email@gmail.com”
+#git config -l
+#cat ~/.gitconfig
+#mkdir GitProject
+#cd GitProject
+#git init .
+#git status
+#git add *
+#git commit -m “Initial commit”
+#git log
+#git log -1 (Last commit)
+#git log -1 -p (print detail)
+#git checkout --file.txt (returns an untracked file to its original state)
+#git diff --staged (view changes before commit)
+Create .gitignore (files and directories are indicated inside)
+#git clone https://xxx (copy repo from github)
+#git push origin (record changes in github)
+#git remote -v (from the local repo folder to find out what protocol the connection uses)
+#git remote set-url origin git@gitxxxx (change the access protocol to ssh key)
+#git branch fix_error (creating a branch called fix_error)
+#git checkout fix_error (go to branch)
+#git branch (display the branches)
+#git branch -d fix_error (delete branch )
+#git checkout -b fix_error (create and go to the branch)
+#git merge fix_error (association main with branch)
+#git branch -D fix_error (removing a branch without merging if there is a commit)
+#git checkout 9a1ed0ec6a4bf4eebeaeacc0ae44c461dc17a731 (go to the commit cache)
+#git checkout main (return to the main)
+#git commit --amend (editing an existing commit)
+#git reset --hard HEAD~2 (fully go back 2 commits back, ~ by one)
+#git reset --soft HEAD~3 (erases commits without affecting data)
+#git push --set-upstream origin zhuk_task001 (to make a push branch, which is not yet available)
+#git push origin --delete zhuk_task001 (delete branch from remote repo)
+#git log --pretty=oneline (shows commits in oneline)
+#git tag (shows existing tags)
+#git tag v1.0.0 (create v1.0.0 in the current commit)
+#git push origin v1.0.0 (push tag)
+#git tag -d v1.0.0 (remove the tag locally)
+#git push origin --delete v1.0.0 (remove the tag from remote repo)
+#git pull (download updates from the repo)
+#git checkout v1.0.0 (go to commit by tag)
+#git tag -a v1.2.0 9a1ed0ec6a4bf4eebeaeacc0ae44c461dc17a731 (create tag v1.2.0 to the commit by cache)
+#git push origin --tags (push all tags)
