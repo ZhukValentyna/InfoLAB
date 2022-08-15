@@ -1,0 +1,17 @@
+Создание Файла:
+
+New-Item -Path . -Name "powershell_cmd.txt" -ItemType "file"
+echo "Text" > .\file.txt
+
+Справка:
+
+Get-Help command
+
+Просмотр:
+# С использованием ключа на скрытые каталоги
+ls -Force
+Get-ChildItem -Path C:\Users\Admin\Desktop\Git\Project1\ -Force
+
+Просмотр файла:
+
+type .\file.txt
