@@ -1,2 +1,2 @@
 # InfoLAB Zhuk Valentyna
-# Some commands I wont to remember. 
+# Some commands I want to remember.
