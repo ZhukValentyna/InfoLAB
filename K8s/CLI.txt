@@ -1,0 +1,40 @@
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                        K8s Cluster Single-node
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+minikube start
+minikube version
+kubectl get componentstatuses
+kubectl cluster-info
+kubectl get nodes
+minikube stop
+minikube delete
+minikube start --cpus=4 --memory=8gb disk-size=25gb
+minikube ssh
+# C:\Users\%USERNAME%\.minikube   -ISO file
+# C:\Users\%USERNAME%\.kube  -Configure file of kubectl
+# Login root without pwd and login docker with tcuser pwd
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                K8s on AWS
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pip3 install awscli --upgrade
+mkdir /K8s/
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /K8s/
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x kubectl
+echo export "PATH=$PATH:/K8s/" >> /etc/bash.bashrc
+eksctl version
+export AWS_ACCESS_KEY_ID=xxxxx
+export AWS_SECRET_ACCESS_KEY=yyyyyy
+export AWS_DEFAULT_REGION=us-west-2
+aws s3 ls
+eksctl create cluster --name TestLAB-K8s
+kubectl cluster-info
+kubectl get nodes
+eksctl delete cluster --name TestLAB-K8s
+# Customize your cluster by using a config file. Just run
+eksctl create cluster -f cluster.yaml
+# More information on https://eksctl.io/
+# ~/.kube/config    - Configure file of kubectl
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   
+                                K8s on GCP
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
