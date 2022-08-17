@@ -12,7 +12,6 @@ RUN apt-get -y install apache2
 
 RUN echo 'Hello World from Docker!' > /var/www/html/index.html
 
-
 CMD ["/usr/sbin/apache2ctl", "-D","FOREGROUND"]
 EXPOSE 80
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -35,11 +34,26 @@ RUN yum -y update
 RUN yum -y install httpd
 RUN yum -y install php
 
-
 COPY ./index.php /var/www/html/index.php
-
-
-
 CMD ["/usr/sbin/httpd","-D","FOREGROUND"]
 
 EXPOSE 80
+# ~~~~~~~~~~~~~~~~~~~~~~~~~ Доделать ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+FROM ubuntu:22.04
+
+ENV TZ=Europe/Kiev
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apt-get -y update
+RUN apt-get -y install apache2
+RUN apt-get -y install php
+
+COPY ./index.php /var/www/html/index.php
+
+CMD ["/usr/sbin/apache2ctl","-D","FOREGROUND"]
+
+EXPOSE 80
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+FROM php:7.2-apache
+
+COPY ./index.php /var/www/html/index.php
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

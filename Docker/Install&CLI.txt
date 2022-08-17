@@ -47,28 +47,30 @@ docker run -d -p  1234:80  TestLAB:latest
 docker tag TestLAB TestLAB-PROD
 docker tag TestLAB TestLAB-PROD:v2
 
-docker rm   # delete container
-docker rmi  # delete image
-
+docker rm                           - delete container
+docker rmi                          - delete image
+docker login                        - Login to DockerHUB
+docker rm -f $(docker ps -aq)       - Delete all Containers
+docker rmi -f $(docker images -q)   - Delete all Images
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # UPDATE IMAGE
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 docker run -d -p 7777:80 TestLAB-PROD
 docker exec -it 5267e21d140 /bin/bash
 echo "V2" >> /var/www/html/index.html
 exit
 docker commit 5267e21d140 TestLAB-PROD:latest
-
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Export/Import Docker Image to file
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 docker save image:tag > arch_name.tar
 docker load -i arch_name.tar
-
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Import/Export Docker Image to AWS ECR
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 docker build -t TestLAB:v1 .
 aws ecr get-login --no-include-email --region=ca-central-1
 docker tag  TestLAB:v1  xxxxx.dkr.ecr.ca-central-1.amazonaws.com/myrepo:latest
 docker push xxxxx.dkr.ecr.ca-central-1.amazonaws.com/myrepo:lastest
-
 docker pull xxxxx.dkr.ecr.ca-central-1.amazonaws.com/myrepo:latest
-
-# Kill and Delete Containers and Images
-docker rm -f $(docker ps -aq)        # Delete all Containers
-docker rmi -f $(docker images -q)    # Delete all Images
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
