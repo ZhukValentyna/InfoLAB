@@ -1,9 +1,8 @@
-#-------------------------------------------------
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Docker commands
-
-Install Docker on Ubuntu
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-```
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#           Install Docker on Ubuntu v18
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 sudo apt update
 sudo apt install apt-transport-https
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -12,66 +11,63 @@ sudo apt update
 sudo apt install docker-ce
 sudo systemctl status docker
 sudo usermod -aG docker $USER
->>>logout/login<<<
-```
-
+# >>>logout/login<<<
 docker run hello-world
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#            Install Docker on Ubuntu v22
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+apt update
+apt upgrade
+apt install lsb-release ca-certificates apt-transport-https software-properties-common -y
+apt install curl
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+apt update
+apt install docker-ce
+systemctl status docker
+docker -v
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+docker ps         - List of running containers
+docker ps -a      - List of ever running containers
+docker images - List of locally images
 
-docker ps
-docker ps -a
-docker images
-
-
-docker search tomcat
-docker pull tomcat
-docker run -it -p 1234:8080 tomcat
+docker search tomcat - Search image in DockerHUB
+docker pull tomcat   - Download image
+docker run -it -p 1234:8080 tomcat  - Run container in interactive mode with redirect port
 docker run -it -p 8888:80 nginx
-docker run -d -p 8888:80 nginx
+docker run -d -p 8888:80 nginx      - Run container in background mode
 
-
-
-docker build -t denis .
+docker build -t TestLAB .           - Make image from dockerfile
 docker images
 
-docker run -it  -p 1234:80  denis:latest
-docker run -d -p  1234:80  denis:latest
+docker run -it  -p 1234:80  TestLAB:latest
+docker run -d -p  1234:80  TestLAB:latest
 
-docker  ps     # list containers
-docker  ps -a  # list all containers
-
-docker tag denis_ubuntu denis_ubuntu-PROD
-docker tag denis_ubuntu denis_ubuntu-PROD:v2
+docker tag TestLAB TestLAB-PROD
+docker tag TestLAB TestLAB-PROD:v2
 
 docker rm   # delete container
 docker rmi  # delete image
 
-UPDATE IMAGE
-~~~~~~~~~~~~~
-docker run -d -p 7777:80 denis_ubuntu4
+# UPDATE IMAGE
+docker run -d -p 7777:80 TestLAB-PROD
 docker exec -it 5267e21d140 /bin/bash
 echo "V2" >> /var/www/html/index.html
 exit
-docker commit 5267e21d140 denis_v2:latest
+docker commit 5267e21d140 TestLAB-PROD:latest
 
-Export/Import Docker Image to file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Export/Import Docker Image to file
 docker save image:tag > arch_name.tar
 docker load -i arch_name.tar
 
-
-Import/Export Docker Image to AWS ECR
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-docker build -t denis:v1 .
+# Import/Export Docker Image to AWS ECR
+docker build -t TestLAB:v1 .
 aws ecr get-login --no-include-email --region=ca-central-1
-docker tag  denis:v1  12345678.dkr.ecr.ca-central-1.amazonaws.com/myrepo:latest
-docker push 12345678.dkr.ecr.ca-central-1.amazonaws.com/myrepo:lastest
+docker tag  TestLAB:v1  xxxxx.dkr.ecr.ca-central-1.amazonaws.com/myrepo:latest
+docker push xxxxx.dkr.ecr.ca-central-1.amazonaws.com/myrepo:lastest
 
-docker pull 12345678.dkr.ecr.ca-central-1.amazonaws.com/myrepo:latest
+docker pull xxxxx.dkr.ecr.ca-central-1.amazonaws.com/myrepo:latest
 
-
-
-Kill and Delete Containers and Images
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Kill and Delete Containers and Images
 docker rm -f $(docker ps -aq)        # Delete all Containers
 docker rmi -f $(docker images -q)    # Delete all Images
