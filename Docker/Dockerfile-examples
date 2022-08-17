@@ -16,7 +16,7 @@ RUN echo 'Hello World from Docker!' > /var/www/html/index.html
 CMD ["/usr/sbin/apache2ctl", "-D","FOREGROUND"]
 EXPOSE 80
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Dockefile to build Docker Image of Apache WebServer running on AmazonLinux 
+# Dockefile to build Docker Image of Apache WebServer running on AmazonLinux
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 FROM amazonlinux
@@ -25,6 +25,21 @@ RUN yum -y update
 RUN yum -y install httpd
 
 RUN echo 'Hello World from Docker!' > /var/www/html/index.html
+CMD ["/usr/sbin/httpd","-D","FOREGROUND"]
+
+EXPOSE 80
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+FROM amazonlinux
+
+RUN yum -y update
+RUN yum -y install httpd
+RUN yum -y install php
+
+
+COPY ./index.php /var/www/html/index.php
+
+
+
 CMD ["/usr/sbin/httpd","-D","FOREGROUND"]
 
 EXPOSE 80

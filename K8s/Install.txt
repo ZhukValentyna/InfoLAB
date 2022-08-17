@@ -1,0 +1,62 @@
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                        K8s Cluster Single-node
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+minikube start
+minikube version
+kubectl get componentstatuses
+kubectl cluster-info
+kubectl get nodes
+minikube stop
+minikube delete
+minikube start --cpus=4 --memory=8gb disk-size=25gb
+minikube ssh
+# C:\Users\%USERNAME%\.minikube   -ISO file
+# C:\Users\%USERNAME%\.kube  -Configure file of kubectl
+# Login root without pwd and login docker with tcuser pwd
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                          K8s on AWS
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+pip3 install awscli --upgrade
+mkdir /K8s/
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /K8s/
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x kubectl
+echo export "PATH=$PATH:/K8s/" >> /etc/bash.bashrc
+eksctl version
+export AWS_ACCESS_KEY_ID=xxxxx
+export AWS_SECRET_ACCESS_KEY=yyyyyy
+export AWS_DEFAULT_REGION=us-west-2
+aws s3 ls
+eksctl create cluster --name TestLAB-K8s
+kubectl cluster-info
+kubectl get nodes
+eksctl delete cluster --name TestLAB-K8s
+# Customize your cluster by using a config file. Just run
+eksctl create cluster -f cluster.yaml
+# More information on https://eksctl.io/
+# ~/.kube/config    - Configure file of kubectl
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                          K8s on GCP
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+sudo apt-get update && sudo apt-get install google-cloud-sdk
+gloud init
+sudo apt install kubectl
+gcloud services enable container.googleapis.com
+gcloud container clusters create TestLAB-K8s
+gcloud container clusters get-credentials TestLAB-K8s
+kubectl cluster-info
+gcloud container clusters create TestLAB2-K8s --num-nodes=2 ( Default 3)
+gcloud container clusters get-credentials TestLAB2-K8s    - Switching between clusters
+gcloud container clusters delete TestLAB-K8s
+# ~/.kube/config    - Configure file of kubectl
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                         Play with Kubernetes
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+https://labs.play-with-k8s.com/
+kubectl get nodes --show-labels
+kubectl label node node2 node-role.kubernetes.io/worker=
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                         Kubectl commands
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

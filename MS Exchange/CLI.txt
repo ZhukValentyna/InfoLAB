@@ -1,0 +1,43 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#           Commands Exchange Management Shell
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Удаление писем из ящика
+Get-Mailbox -ResultSize unlimited| Search-Mailbox -SearchQuery {subject:"Тема" AND received:"2/22/2022" AND From:"name@domain.xxx"} -TargetMailbox name_adm -TargetFolder 'PLAN' -DeleteContent
+# Скрипт для выборки отправителей и адресатов в случае отправки почты вне домена
+Get-User -ResultSize unlimited | where {$_.OrganizationalUnit -like "domain.local/OU_name*"} | ft WindowsEmailAddress > c:\install\senders.txt
+$results = foreach ($b in $a) { Get-MessageTrackingLog -eventid send -Start 2/22/2022 -Sender $b | where {$_.Recipients -notlike "*@domain.xxx" -and$_.Recipients -notlike "*@domain.yy" -and $_.Recipients -notlike "*@domain.zzzz"} | ft Timestamp, Sender, Recipients, MessageSubject -AutoSize | Out-String -Width 4096}
+$results | Out-file C:\install\result2.txt -Append
+# Выборка ящиков с последним входом в почту из OU
+Get-Mailbox -OrganizationalUnit "OU=OU_name,DC=domain,DC=local" -ResultSize unlimited | Get-MailboxStatistics | ft DisplayName,LastLogonTime
+Get-Mailbox -OrganizationalUnit "OU=OU_name,DC=domain,DC=local" -ResultSize unlimited | Get-MailboxStatistics |where {$_.LastLogonTime -le (get-date).adddays(-60)} | sort LastLogonTime -descending| ft DisplayName,LastLogonTime,Database,TotalItemSize > c:\install\officeusers.txt
+# Узнать кол-во пользователей в базах
+(Get-MailboxDatabase) | ForEach-Object {Write-Host $_.Name (Get-Mailbox -Database $_.Name).Count}
+# X-OWA-Error System.Globalization.CultureNotFoundException
+Set-MailboxRegionalConfiguration -Identity name -Language 1049
+# Поиск отключенного ящика
+Get-MailboxDatabase | Get-MailboxStatistics | Where { $_.DisplayName -eq "Отображаемое имя" } | fl DisplayName,Database,DisconnectReason
+# Подключаем ящик
+Connect-Mailbox -Identity "Отображаемое имя" -Database DB_name -User "Отображаемое имя" -Alias "name"
+# Фильтры входящего трафика на эдже
+Get-ContentFilterConfig
+# добавить доверенный домен через запятую к уже существующим
+Set-ContentFilterConfig -BypassedSenderDomains domain.xxx, domain.yy, gmail.com, mail.ru
+# Список блокировок у Пользователя
+Get-Mailbox name@domain.xxx | Get-MailboxJunkEmailConfiguration
+# Выводит на какие группы может отправлять сотрудник
+Get-DistributionGroup|Select-Object Name,PrimarySmtpAddress,AcceptMessagesOnlyFromSendersOrMembers|where-object {$_.AcceptMessagesOnlyFromSendersOrMembers -notlike $null -and [string]$_.AcceptMessagesOnlyFromSendersOrMembers -like "*Отображаемое имя*" }|fl|Out-File c:\install\Distributionforuser.txt
+# Удалить содержимое ящика
+search-mailbox name -Deletecontent
+# Миграция
+New-MoveRequest -Identity "Отображаемое имя" -PrimaryOnly -TargetDatabase "DB_name" -Priority Highest
+Get-moverequest|get-moverequeststatistics
+Get-MoveRequest -MoveStatus Completed | Remove-MoveRequest
+# Создание ящика
+Enable-Mailbox -Identity name -Database "DB_name"|Enable-Mailbox -ArchiveDatabase "ADB_name"
+Set-MailboxRegionalConfiguration -Identity  name -Language uk-UA -TimeZone "FLE Standard Time" -TimeFormat "HH:mm" -LocalizeDefaultFolderName
+#Экспорт необходимых писем
+New-MailboxExportRequest -Mailbox "Отображаемое имя" -FilePath \\SHARE\export.pst -IncludeFolders "Название каталога"
+Get-MailboxExportRequest
+#  Импорт
+New-MailboxImportRequest -Mailbox "Отображаемое имя" -FilePath \\SHARE\export.pst
+Get-MailboxImportRequest

@@ -1,9 +1,13 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#           Install and config GIT
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #sudo apt-get install git
 #git --version
 #git config --global user.name “Valentyna Zhuk”
 #git config --global user.email “email@gmail.com”
 #git config -l
 #cat ~/.gitconfig
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #mkdir GitProject
 #cd GitProject
 #git init .

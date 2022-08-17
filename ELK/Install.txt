@@ -1,0 +1,29 @@
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                        Install ELK 7.x on CentOS 7
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sudo yum -y update
+sudo reboot
+sudo yum -y install java-1.8.0-openjdk  java-1.8.0-openjdk-devel
+cat <<EOF | sudo tee /etc/profile.d/java8.sh
+export JAVA_HOME=/usr/lib/jvm/jre-openjdk
+export PATH=\$PATH:\$JAVA_HOME/bin
+export CLASSPATH=.:\$JAVA_HOME/jre/lib:\$JAVA_HOME/lib:\$JAVA_HOME/lib/tools.jar
+EOF
+source /etc/profile.d/java8.sh
+cat <<EOF | sudo tee /etc/yum.repos.d/elasticsearch.repo
+sudo yum clean all
+sudo yum makecache
+sudo yum -y install elasticsearch-oss
+rpm -qi elasticsearch-oss
+sudo systemctl enable --now elasticsearch
+sudo systemctl status elasticsearch
+curl http://127.0.0.1:9200
+sudo yum install kibana-oss
+sudo vi /etc/kibana/kibana.yml
+server.host: "0.0.0.0"
+server.name: "kibana.example.com"
+elasticsearch.url: "http://localhost:9200"
+sudo systemctl enable --now kibana
+sudo firewall-cmd --add-port=5601/tcp --permanent
+sudo firewall-cmd --reload
+yum -y install logstash-oss
