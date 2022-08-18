@@ -1,0 +1,9 @@
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                        K8s Helm
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# https://helm.sh/
+wget https://get.helm.sh/helm-v3.9.3-linux-amd64.tar.gz
+tar -xf helm-v3.9.3-linux-amd64.tar.gz
+cd linux-amd64/
+sudo mv helm /bin/
+helm version
