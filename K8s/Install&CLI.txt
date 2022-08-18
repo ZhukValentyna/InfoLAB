@@ -60,3 +60,15 @@ kubectl label node node2 node-role.kubernetes.io/worker=
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #                         Kubectl commands
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ kubectl get pods
+ kubectl run ubuntu-hello --image=zhukvalentyna/testlab-k8s:ubuntu --port=8081
+ kubectl delete pods ubuntu-hello
+ kubectl describe pods ubuntu-hello
+ kubectl exec ubuntu-hello -- date
+ kubectl exec ubuntu-hello -- cat /var/www/html/index.php
+ kubectl exec -it ubuntu-hello -- sh
+ kubectl logs ubuntu-hello
+ kubectl port-forward ubuntu-hello 8081:80    - Forward from localhost
+ kubectl apply -f .\ubuntu-hello.yaml         - Create pods from manifest
+ kubectl apply -f .\ubuntu-hello.yaml         - Restart pod with different image in manifest
+ kubectl delete -f .\ubuntu-hello.yaml

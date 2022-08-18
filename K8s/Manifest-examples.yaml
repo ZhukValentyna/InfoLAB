@@ -1,0 +1,55 @@
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#    Simpliest Manifest File to create Pod with one Container
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+apiVersion : v1
+kind: Pod
+metadata:
+  name: ubuntu-hello
+spec:
+  containers:
+    - name : container-hello
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#       Manifest File to create Pod with two Containers
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+apiVersion : v1
+kind: Pod
+metadata:
+  name: testlab
+  labels:
+    env  : prod
+    app  : main
+    tier : frontend
+    owner: ZhukValentyna
+spec:
+  containers:
+    - name : container-ubuntu
+      image: zhukvalentyna/testlab-k8s:ubuntu
+      ports:
+        - containerPort: 80
+
+    - name : container-api
+      image: tomcat:8.5.38
+      ports:
+        - containerPort: 8080
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#   Manifest File to create Pod with one Container and  Labels
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+apiVersion : v1
+kind: Pod
+metadata:
+  name: my-web
+  labels:
+    env  : prod
+    app  : main
+    tier : frontend
+    owner: ZhukValentyna
+spec:
+  containers:
+    - name : container-apache
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
