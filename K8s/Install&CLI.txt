@@ -54,9 +54,17 @@ gcloud container clusters delete TestLAB-K8s
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #                         Play with Kubernetes
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-https://labs.play-with-k8s.com/
+# https://labs.play-with-k8s.com/
+# COPY -> CTRL+INSERT or CTRL+FN+INSERT
+# PASTE -> SHIFT+CTRL+V
+kubeadm init --apiserver-advertise-address $(hostname -i) --pod-network-cidr 10.5.0.0/16
+kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter.yaml
+kubeadm join 192.168.0.13:6443 --token aaxfpd.yx55zhwi0r2w8xh7 \
+    --discovery-token-ca-cert-hash sha256:82a99d99acc54e0e184d86b116514718aed037f1818336c588760fbc2bebb4a5
+
 kubectl get nodes --show-labels
 kubectl label node node2 node-role.kubernetes.io/worker=
+curl        - Check ClusterIP
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #                         Kubectl commands
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -72,3 +80,38 @@ kubectl label node node2 node-role.kubernetes.io/worker=
  kubectl apply -f .\ubuntu-hello.yaml         - Create pods from manifest
  kubectl apply -f .\ubuntu-hello.yaml         - Restart pod with different image in manifest
  kubectl delete -f .\ubuntu-hello.yaml
+
+kubectl get deploy                            - Alias of deployment
+kubectl create deployment my-testlab-deploy --image zhukvalentyna/testlab-k8s:ubuntu
+kubectl scale deployment my-testlab-deploy --replicas 3
+kubectl get rs                                - ReplicaSet
+kubectl autoscale deployment my-testlab-deploy --min=4 --max=6 --cpu-percent=80
+kubectl get hpa
+kubectl rollout history deployment/my-testlab-deploy
+kubectl describe deployment my-testlab-deploy
+kubectl set image deployment/my-testlab-deploy testlab-k8s=nginx:latest --record
+kubectl rollout status deployment/my-testlab-deploy
+kubectl rollout undo deployment/my-testlab-deploy                     - Last version
+kubectl rollout undo deployment/my-testlab-deploy --to-revision=2
+kubectl rollout restart deployment/my-testlab-deploy                  - Update deploy if docker image changed
+
+kubectl expose deployment my-testlab-deploy --type=ClusterIP --port 80    - ClusterIP is default type
+kubectl get svc                                                           - Alias services
+kubectl delete service my-testlab-deploy
+kubectl expose deployment my-testlab-deploy --type=NodePort --port 80
+kubectl describe nodes
+kubectl describe nodes | grep ExternalIP
+kubectl expose deployment my-testlab-deploy --type=LoadBalancer --port 80
+kubectl apply -f manifest-service.yaml
+kubectl delete -f manifest-service.yaml
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                         Ingress Controller
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+https://docs.google.com/spreadsheets/d/191WWNpjJ2za6-nbG4ZoUMXMpUK8KlCIosvQB0f-oq3k/edit#gid=907731238
+
+kubectl apply -f https://projectcontour.io/quickstart/contour.yaml
+kubectl get pods -n projectcontour -o wide                            - Namespace projectcontour
+kubectl apply -f ingress-examples.yaml
+kubectl get ingress
+kubectl describe ingress
+kubectl delete ns projectcontour                                      - Completely delete Ingress Controller: Contour
