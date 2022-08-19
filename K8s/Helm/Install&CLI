@@ -1,9 +1,23 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#                        K8s Helm
+#                       Helm package manager for K8s
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # https://helm.sh/
+# https://artifacthub.io/
+
 wget https://get.helm.sh/helm-v3.9.3-linux-amd64.tar.gz
 tar -xf helm-v3.9.3-linux-amd64.tar.gz
 cd linux-amd64/
 sudo mv helm /bin/
 helm version
+helm list
+helm install app Chart-TestLAB/
+helm install app1 Chart-TestLAB/ --set container.image=php:7.2-apache --set replicaCount=3
+helm upgrade app1 Chart-TestLAB/ --set container.image=nginx:latest --set replicaCount=2
+helm install app2 Chart-TestLAB/ -f other_values.yaml
+helm package Chart-TestLAB/
+helm install app3 App-HelmChart-0.1.0.tgz
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm search repo
+helm install Site-apache-release bitnami/apache
+helm install custom-site-apache bitnami/apache -f Values-examles.yaml
+helm delete app or helm uninstall app
