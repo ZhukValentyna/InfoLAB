@@ -5,5 +5,5 @@
 
 cloneHtdocsFromGit:
   enabled: true
-  repository:	"https://github.com/adv4000/simplewebpage"
+  repository:	"https://github.com/ZhukValentyna/InfoLAB/tree/main/webpage"
   branch: "main"

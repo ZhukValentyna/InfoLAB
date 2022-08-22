@@ -26,10 +26,23 @@ systemctl status docker
 docker -v
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #                  Docker commands
+# https://docs.docker.com/get-started/s
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 docker ps                           - List of running containers
 docker ps -a                        - List of ever running containers
 docker images                       - List of locally images
+
+docker logs CONTAINER
+docker stats                        - Resource usage statistics
+docker restart
+docker top CONTAINER
+docker inspect IMAGE/CONTAINER
+docker diff CONTAINER
+docker port CONTAINER
+
+docker rename OLD_NAME NEW_NAME
+docker pause/unpause CONTAINER
+
 
 docker search tomcat                - Search image in DockerHUB
 docker pull tomcat                  - Download image
@@ -52,8 +65,14 @@ docker rmi                          - delete image
 docker login                        - Login to DockerHUB
 docker rm -f $(docker ps -aq)       - Delete all Containers
 docker rmi -f $(docker images -q)   - Delete all Images
+docker image prune -a               - All unuse images
+docker system prune                 - Delete all containers, networks and images without name and tag
+
+docker network (ls|rm|create|inspect|...)
+docker volume (ls|rm|create|inspect|...)
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# UPDATE IMAGE
+#                     UPDATE IMAGE
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 docker run -d -p 7777:80 TestLAB-PROD
 docker exec -it 5267e21d140 /bin/bash
@@ -61,12 +80,12 @@ echo "V2" >> /var/www/html/index.html
 exit
 docker commit 5267e21d140 TestLAB-PROD:latest
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Export/Import Docker Image to file
+#         Export/Import Docker Image to file
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 docker save image:tag > arch_name.tar
 docker load -i arch_name.tar
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Import/Export Docker Image to AWS ECR
+#       Import/Export Docker Image to AWS ECR
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 docker build -t TestLAB:v1 .
 aws ecr get-login --no-include-email --region=ca-central-1
@@ -74,3 +93,30 @@ docker tag  TestLAB:v1  xxxxx.dkr.ecr.ca-central-1.amazonaws.com/myrepo:latest
 docker push xxxxx.dkr.ecr.ca-central-1.amazonaws.com/myrepo:lastest
 docker pull xxxxx.dkr.ecr.ca-central-1.amazonaws.com/myrepo:latest
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#     Mounting a directory on container startup
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+docker run -v $(pwd):/tmp my_application:0.1      - mount print working directory to tmp in container
+docker volume create my_volume
+docker run -v my_volume:/tmp my_application:0.1
+
+docker cp CONTAINER:/app/my_file.txt filename.txt  - copy file from container
+docker cp filename.txt CONTAINER:/app/my_file.txt  - copy file to container
+# copying between containers is not supported
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                        Network
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Find out the container's IP address:
+docker inspect -f "{{ range .NetworkSettings.Networks }}{{ .IPAddress }} {{end}}" CONTAINER
+docker network ls
+# Type of networks: host, none, bridge
+docker network create my_network                        - create network
+docker run -dp 9200:9200 --net my_network nginx         - use network
+docker run -p 127.0.0.1:80:80 nginx                     - use interface
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#        You can run your own image repository
+# https://docs.docker.com/registry/deploying/
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+docker run -d -p 5000:5000 --restart=always --name registry registry:2
+docker pull ubuntu:16.04
+docker tag ubuntu:16.04 localhost:5000/my-ubuntu
+docker push localhost:5000/my-ubuntu

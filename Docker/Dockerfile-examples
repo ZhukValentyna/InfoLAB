@@ -2,6 +2,23 @@
 #             Best practices for writing Dockerfiles
 https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                      List of Docker instructions
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+FROM
+LABEL
+ENV
+RUN
+COPY
+ADD
+CMD
+WORKDIR
+ARG
+ENTRYPOINT
+EXPOSE
+VOLUME
+USER
+# Each instruction creates a new layer. Max layers are 127
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Dockefile to build Docker Image of Apache WebServer running on Ubuntu
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
