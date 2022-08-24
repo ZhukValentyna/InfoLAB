@@ -1,0 +1,45 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                     Install AWS CLI
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+python3 --version
+sudo apt-get install awscli         - Install for Linux, need a python
+aws --version
+
+python -V
+pip install awscli                  - Install for Windows, need a python
+aws --version
+
+aws configure                       - Connect to AWS console via CLI, will create a folder ./aws in ~
+AWS Access key ID
+AWS Secret Access Key
+Default region name
+Default output format
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#              S3 - Simple Storage Service
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 99.99% availability
+# 99.999999999 durability
+# Max file size - 5TB via Multipart Upload
+# Max file size per one PUT - 5GB
+
+# *** Service types ***
+# 1. Amazon S3 Standard
+# 2. Amazon S3 Standard - Infrequent Access
+# 3. Reduced Redundancy Storage
+# 4. Amazon Glacier                   - Access to data on request during 3-5h
+ _______________________________________________________________________________
+|                     |               |     Standard -    |        Reduced      |
+|                     |    Standard   | Infrequent Access |  Redundancy Storage |
+|_____________________|_______________|___________________|_____________________|
+|       Durability    | 99.999999999% |    99.999999999%  |       99.99%        |
+|_____________________|_______________|___________________|_____________________|
+| Concurrent facility |               |                   |                     |
+|   fault tolerance   |       2       |          2        |          1          |
+|_____________________|_______________|___________________|_____________________|
+|     SSL support     |      Yes      |         Yes       |          Yes        |
+|_____________________|_______________|___________________|_____________________|
+| First byte latency  | Milliseconds  |     Milliseconds  |     Milliseconds    |
+|_____________________|_______________|___________________|_____________________|
+|      Lifecycle      |               |                   |                     |
+| Management Policies |      Yes      |         Yes       |          Yes        |
+|_____________________|_______________|___________________|_____________________|
