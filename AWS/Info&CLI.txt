@@ -1,5 +1,5 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#                     Install AWS CLI
+#                             Install AWS CLI
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 python3 --version
 sudo apt-get install awscli         - Install for Linux, need a python
@@ -15,12 +15,14 @@ AWS Secret Access Key
 Default region name
 Default output format
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#              S3 - Simple Storage Service
+#                       S3 - Simple Storage Service
+# http://zhuk.testlab.s3-website.eu-central-1.amazonaws.com/
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 99.99% availability
 # 99.999999999 durability
 # Max file size - 5TB via Multipart Upload
 # Max file size per one PUT - 5GB
+# Number of default buckets per account - 100
 
 # *** Service types ***
 # 1. Amazon S3 Standard
@@ -43,3 +45,39 @@ Default output format
 |      Lifecycle      |               |                   |                     |
 | Management Policies |      Yes      |         Yes       |          Yes        |
 |_____________________|_______________|___________________|_____________________|
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                   Example to configure multi-account in CLI
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# in ./aws/config
+[default]
+region = eu-west-3
+output = text
+
+[profile reader]
+region = eu-central-1
+output = json
+
+[profile writer]
+region = eu-central-1
+output = table
+
+# in ./aws/credentials
+[default]
+aws_access_key_id =
+aws_secret_access_key =
+
+[reader]
+aws_access_key_id =
+aws_secret_access_key =
+
+[writer]
+aws_access_key_id =
+aws_secret_access_key =
+
+aws s3 mb s3://name.name --profile=writer     - Create bucket with default settings in profile
+aws s3 ls --profile=reader                    - Show list of buckets
+aws s3 cp "D:\TMP\name" s3://name.name        - Copy file or directory
+aws s3 sync . s3://name.name                  - Synchronization the current directory with bucket
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
