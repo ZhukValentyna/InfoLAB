@@ -1,0 +1,46 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                     Examples of Bootstrapping for Linux
+# LogFile            :   /var/log/cloud-init-output.log
+# Данные о Сервере EC2 - http://169.254.169.254/latest/meta-data/
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#!/bin/bash
+echo ">>>>>>>>>>>>>>>>>>>> START SCRIPT <<<<<<<<<<<<<<<<<<<<<<"
+yum -y update
+yum -y install httpd
+echo "<html><body bgcolor=black><center><h2><p><font color=#31DFDD>ZHUK VALENTYNA</h2></center></body></html>" > /var/www/html/index.html
+service httpd start
+chkconfig httpd on
+echo "UserData executed on &(data) " >> /var/www/html/log.txt
+echo ">>>>>>>>>>>>>>>>>>>> END SCRIPT <<<<<<<<<<<<<<<<<<<<<<"
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#!/bin/bash
+echo ">>>>>>>>>>>>>>>>>>>> START SCRIPT <<<<<<<<<<<<<<<<<<<<<<"
+yum -y update
+yum -y install httpd
+aws s3 sync s3://name.name /var/www/html
+service httpd start
+chkconfig httpd on
+echo ">>>>>>>>>>>>>>>>>>>> END SCRIPT <<<<<<<<<<<<<<<<<<<<<<"
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                   Examples of Bootstrapping for Windows
+# LogFile  : Windows 2016: C:\ProgramData\Amazon\EC2-Windows\Launch\UserdataExecution.log
+#           Windows 2012: C:\Program Files\Amazon\Ec2ConfigService\Logs\Ec2ConfigLog.txt
+#           Windows 2008: C:\Program Files\Amazon\Ec2ConfigService\Logs\Ec2ConfigLog.txt
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+<powershell>
+Write-Host "%%%%%%%%%%%%%%%%%%%%%%% START WINDOWS SCRIPT %%%%%%%%%%%%%%%%%%%%%%%"
+Add-WindowsFeature web-webserver
+Set-Content c:\Users\Administrator\Desktop\test.txt "UserData executed on $(Get-Date)"
+Rename-Computer -NewName Windows-web
+Add-Content c:\Users\Administrator\Desktop\test.txt "****** Test File ******"
+Get-Service | Out-File c:\Users\Administrator\Desktop\test.txt -Append | Format-Table
+Test-Connection www.google.com | Out-File c:\Users\Administrator\Desktop\test.txt -Append | Format-Table
+Write-Host "%%%%%%%%%%%%%%%%%%%%%%% END WINDOWS SCRIPT %%%%%%%%%%%%%%%%%%%%%%%"
+</powershell>
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

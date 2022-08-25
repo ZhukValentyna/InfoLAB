@@ -83,13 +83,16 @@ aws s3 sync . s3://name.name                  - Synchronization the current dire
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #                       EC2 - Elastic Compute Cloud
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 # *** Kinds of Instances ***
+
 # 1. On Demand                                    - hourly payment
 # 2. Reserved (1-3 year)                          - Price reduced by 70% when paid in full
 # 3. Scheduled Reserved (daily, weekly, monthly)  - Available in regions US
 # 4. Dedicated Hosts                              - Physical host binding, used in licensing
 
 # *** Types of Instances ***
+
 # 1. T   - General Purpose            ~ CPU 2.5Hz
 # 2. M   - General Purpose
 # 3. C   - Compute Optimized
@@ -101,8 +104,11 @@ aws s3 sync . s3://name.name                  - Synchronization the current dire
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #      EBS - Elastic Block Store
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 # *** Types of Disks ***
+
 # Min = 1GB, Max = 16TB
+
 # Root-Boot:
 # 1. General Purpose SSD (GP2)        - For (gp2) volumes, baseline performance scales linearly at 3 IOPS per GiB
                                       from a minimum of 100 IOPS (at 33.33 GiB and below)
@@ -119,32 +125,6 @@ aws s3 sync . s3://name.name                  - Synchronization the current dire
 # 7. Throughput Optimized HDD (ST1)   - performance is measured in throughput (MiB/s)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#      Examples of Bootstrapping
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-#!/bin/bash
-echo "%%%%%%%%%%%%%%%%%%%%%%% START LINUX SCRIPT %%%%%%%%%%%%%%%%%%%%%%%"
-yum -y update
-yum -y install httpd
-echo "<html><body bgcolor=black><center><h2><p><font color=#31DFDD>ZHUK VALENTYNA</h2></center></body></html>" > /var/www/html/index.html
-service httpd start
-chkconfig httpd on
-echo "UserData executed on &(data) " >> /var/www/html/log.txt
-echo "%%%%%%%%%%%%%%%%%%%%%%% END SCRIPT %%%%%%%%%%%%%%%%%%%%%%%"
-
-# LogFile               :   /var/log/cloud-init-output.log
-
-<powershell>
-Write-Host "%%%%%%%%%%%%%%%%%%%%%%% START WINDOWS SCRIPT %%%%%%%%%%%%%%%%%%%%%%%"
-Add-WindowsFeature web-webserver
-Set-Content c:\Users\Administrator\Desktop\test.txt "UserData executed on $(Get-Date)"
-Rename-Computer -NewName Windows-web
-Add-Content c:\Users\Administrator\Desktop\test.txt "****** Test File ******"
-Get-Service | Out-File c:\Users\Administrator\Desktop\test.txt -Append | Format-Table
-Test-Connection www.google.com | Out-File c:\Users\Administrator\Desktop\test.txt -Append | Format-Table
-Write-Host "%%%%%%%%%%%%%%%%%%%%%%% END WINDOWS SCRIPT %%%%%%%%%%%%%%%%%%%%%%%"
-
-# LogFile               :
-#                                       Windows 2016: C:\ProgramData\Amazon\EC2-Windows\Launch\UserdataExecution.log
-#                                       Windows 2012: C:\Program Files\Amazon\Ec2ConfigService\Logs\Ec2ConfigLog.txt
-#                                       Windows 2008: C:\Program Files\Amazon\Ec2ConfigService\Logs\Ec2ConfigLog.txt
+# Данные о Сервере EC2 - http://169.254.169.254/latest/meta-data/
+a= `curl http://169.254.169.254/latest/meta-data/.... `
+echo $a
