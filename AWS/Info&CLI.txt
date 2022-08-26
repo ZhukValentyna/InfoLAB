@@ -128,3 +128,48 @@ aws s3 sync . s3://name.name                  - Synchronization the current dire
 # Данные о Сервере EC2 - http://169.254.169.254/latest/meta-data/
 a= `curl http://169.254.169.254/latest/meta-data/.... `
 echo $a
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                       ELB - Elastic Load Balancer
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Elastic Load Balancing automatically distributes your incoming traffic across multiple targets,
+# such as EC2 instances, containers, and IP addresses, in one or more Availability Zones.
+# It monitors the health of its registered targets, and routes traffic only to the healthy targets.
+# Elastic Load Balancing scales your load balancer capacity automatically in response to changes
+# in incoming traffic
+
+# 1. Application Load Balancers
+# 2. Network Load Balancers
+# 3. Gateway Load Balancers
+# 4. Classic Load Balancers
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#      Auto Scaling Group
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Vertical scaling - t2.micro -> t2.medium -> t2.large
+# Horizontal scaling used in Auto scaling, add clone of instance
+# Scale out - increase
+# Scale in - reduce
+
+              ----> Launch Configuration : describes what instance to start
+Auto Scaling |
+              ----> Auto Scaling Group : describes how many to start and when to add and remove
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                       VPC - Virtual Private Cloud
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# VPC can be created for one region and for all availability zones
+# Max CIDR block - /16 -5 ip reserved by AWS      Min CIDR block - /28 -5 ip reserved by AWS
+
+# Public subnet - all instances have public ip, direct access to the Internet
+# Private subnet - all instances don`t have public ip, access to the Internet via NAT
+# Database subnet - doesn`t have access to the internet
+
+# VPC Flow logs can be enabled on:
+          * VPC
+          * Subnet
+          * Interface
+#  Needs IAM Role with access to Cloud Watch
+
+# VPC Peering used to connect multiple VPS in one region. Can be used for different AWS accounts
