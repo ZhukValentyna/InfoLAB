@@ -173,3 +173,66 @@ Auto Scaling |
 #  Needs IAM Role with access to Cloud Watch
 
 # VPC Peering used to connect multiple VPS in one region. Can be used for different AWS accounts
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                                Cloud Formation
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Infrastructure as a Code - IaaC
+# Automating the creation and modification of infrastructure
+# CloudFormation Stack - Container with created resources
+# CloudFormation Template - Program code describing what to create, in yaml or json format
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                      SNS - Simple Notification Service
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Push Notification
+# Allows you to publish messages, works as a mailing list.
+# Consists of topic and subscribers:
+                                    * HTTP
+                                    * HTTPS
+                                    * Email
+                                    * Email-JSON
+                                    * Amazon SQS
+                                    * Application
+                                    * AWS Lambda
+                                    * SMS
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                      SQS - Simple Queue Service
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# First service in AWS
+# Pull Based system
+# Allows you to send messages to the queue, and other services receive these messages through pull requests
+# Works as temporary storage, with guaranteed delivery at least once
+# Allows you to DECOUPLE system components
+# Max size of message - 256KB in any format
+
+# Standard Queue - without FIFO (First IN First Out). Use Index to solve problem
+# FIFO Queue - with FIFO, a little more expensive
+# Retention Period - from 1m to 14d. By default 4d
+# Visibility TimeOut - the time for which a message disappears from the queue after it is received.
+                       If there was no command (DeleteMessage) during this time, the message is returned to the queue.
+                       Can change (ChangeMessageVisibility) Max 12h, by default 30s
+# Long Polling - delay checking for new messages in the queue, by default 1s, max 20s
+# InFlight Messages in Standard Queue - 120.000
+# InFlight Messages in FIFO Queue - 20.000
+# Dead-Letter Queue - message that cannot be processed
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                     CDN - Content Delivery Network (Cloud Front)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Consists of Edge Locations
+# Used to cash of static content
+ __________________________________________________________________________
+|                       |                            |                     |
+|   Price class All+>   |        Price class 200 +>  |   Price class 100   |
+|_______________________|____________________________|_____________________|
+|     South America     |            Japan           |    United States    |
+|_______________________|____________________________|_____________________|
+|       Australia       |            India           |        Europe       |
+|_______________________|____________________________|_____________________|
+|                       |   Hong Kong, Philippines   |                     |
+|                       | S.Korea, Singapore, Taiwan |        Canada       |
+|_______________________|____________________________|_____________________|
+
+# Default TTL of cash - 24h, Max - 365d
