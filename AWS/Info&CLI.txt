@@ -223,6 +223,7 @@ Auto Scaling |
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Consists of Edge Locations
 # Used to cash of static content
+# Default TTL of cash - 24h, Max - 365d
  __________________________________________________________________________
 |                       |                            |                     |
 |   Price class All+>   |        Price class 200 +>  |   Price class 100   |
@@ -235,4 +236,61 @@ Auto Scaling |
 |                       | S.Korea, Singapore, Taiwan |        Canada       |
 |_______________________|____________________________|_____________________|
 
-# Default TTL of cash - 24h, Max - 365d
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                              Elastic Beanstalk
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Allows you to very quickly raise the infrastructure for your application.
+# It is also very easy and fast to update your code, including reverting to a previous version.
+# Related to CD(continuous deployment) technology
+# Enables easy implementation of devops green/blue deployment method
+# Supports the following platforms:
+                                    * Java
+                                    * .NET
+                                    * PHP
+                                    * Node.js
+                                    * Python
+                                    * Ruby
+                                    * Go
+                                    * Docker
+# .ebextensions - *.config files with settings allow full customization of the infrastructure
+# https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/ebextensions.html
+# Types of command in *.config files:
+      * packages - download and install programs (yum, rpm, msi)
+      * sources - download archive and unpack (tar, gzip, zip)
+      * files - create files (can download used source)
+      * users - only Linux
+      * groups - only Linux
+      * commands - run system commands before unpack application
+      * container_commands - run system commands after unpack application
+      * services - stop/start services
+      * Resources - create additional AWS resources (CloudFormation)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                       RDS - Relation Database Service
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Public or Private Endpoint
+# Read Replica
+# Backup Snapshots Automatic - erased when removed RDS Instances
+# Backup Snapshots Manual - not erased when removed RDS Instances
+# Multi AZ - creating an additional synchronized instance in other Availability Zone
+             Used for Fail Tolerance
+# Engine Type:
+                * Amazon aurora
+                * MySQL
+                * MariaDB
+                * PostgreSQL
+                * Oracle
+                * Microsoft SQL Server
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#    Migration DB to AWS RDS
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 1. Create S3 bucket in same Region as RDS and upload your .bak files
+# 2. Create new RDS OptionGroup with SQLSERVER_BACKUP_RESTORE option
+# 3. Apply this OptionGroup to your RDS instead of default OptionGroup
+# 4. Connect to RDS, open NewQuery, and execute stored procedure:
+
+      exec msdb.dbo.rds_restore_database
+          @restore_db_name='MyDB',
+          @s3_arn_ro_restore_from='arn:aws:s3:::mybucketwith-backup/MyDB.bak';
+      exec msdb.dbo.rds_task_status;
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
