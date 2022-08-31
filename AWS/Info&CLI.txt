@@ -1,5 +1,6 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #                             Install AWS CLI
+# https://github.com/orgs/awsdocs/repositories
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 python3 --version
 sudo apt-get install awscli         - Install for Linux, need a python
@@ -14,6 +15,53 @@ AWS Access key ID
 AWS Secret Access Key
 Default region name
 Default output format
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                   IAM -  Identity and Access Management
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# web service that helps you securely control access to AWS resources.
+# You use IAM to control who is authenticated (signed in) and authorized (has permissions) to use resources.
+
+# You can make Cross Account Access:
+    * A role is created in the account to which you need to access for Account ID
+    * In Trust relationships make access for another user in account by arn (default root - all)
+    * Account who want access make Assume Role by arn (Default for 1h) and take credentials - in CLI
+aws iam get-user
+aws sts assume-role --role-arn "arn:aws:iam::xxxxxxx" --role-session "TestSessionMultiAccount"
+export/set AWS_ACCESS_KEY_ID=
+export/set AWS_SECRET_ACCESS_KEY=
+export/set AWS_SESSION_TOKEN=
+    * Or use Switch Role(Account ID & Role Name) or URL from created Role -  in Console
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Example to configure multi-account in CLI
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# in ./aws/config
+[default]
+region = eu-west-3
+output = text
+
+[profile reader]
+region = eu-central-1
+output = json
+
+[profile writer]
+region = eu-central-1
+output = table
+
+# in ./aws/credentials
+[default]
+aws_access_key_id =
+aws_secret_access_key =
+
+[reader]
+aws_access_key_id =
+aws_secret_access_key =
+
+[writer]
+aws_access_key_id =
+aws_secret_access_key =
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #                       S3 - Simple Storage Service
 # http://zhuk.testlab.s3-website.eu-central-1.amazonaws.com/
@@ -45,35 +93,6 @@ Default output format
 |      Lifecycle      |               |                   |                     |
 | Management Policies |      Yes      |         Yes       |          Yes        |
 |_____________________|_______________|___________________|_____________________|
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#                   Example to configure multi-account in CLI
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# in ./aws/config
-[default]
-region = eu-west-3
-output = text
-
-[profile reader]
-region = eu-central-1
-output = json
-
-[profile writer]
-region = eu-central-1
-output = table
-
-# in ./aws/credentials
-[default]
-aws_access_key_id =
-aws_secret_access_key =
-
-[reader]
-aws_access_key_id =
-aws_secret_access_key =
-
-[writer]
-aws_access_key_id =
-aws_secret_access_key =
 
 aws s3 mb s3://name.name --profile=writer     - Create bucket with default settings in profile
 aws s3 ls --profile=reader                    - Show list of buckets
@@ -160,7 +179,9 @@ Auto Scaling |
 #                       VPC - Virtual Private Cloud
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # VPC can be created for one region and for all availability zones
-# Max CIDR block - /16 -5 ip reserved by AWS      Min CIDR block - /28 -5 ip reserved by AWS
+# Max size of CIDR block - /16 -5 ip reserved by AWS
+# Min size of CIDR block - /28 -5 ip reserved by AWS
+# VPC can consist max of 5 CIDR blocks
 
 # Public subnet - all instances have public ip, direct access to the Internet
 # Private subnet - all instances don`t have public ip, access to the Internet via NAT
@@ -172,7 +193,12 @@ Auto Scaling |
           * Interface
 #  Needs IAM Role with access to Cloud Watch
 
-# VPC Peering used to connect multiple VPS in one region. Can be used for different AWS accounts
+# VPC Peering used to connect multiple VPS. Must be different CIDR blocks!
+# In-region VPC peering
+# Inter-region VPC peering
+# Cross-account VPC peering
+
+#VPC Endpoint - Internal access to AWS services
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #                                Cloud Formation
@@ -294,3 +320,51 @@ Auto Scaling |
       exec msdb.dbo.rds_task_status;
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                       SSM - Simple system Manager
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                Node Management
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# You must add IAM Roles to EC2 instances (ssm)
+# You can add your local servers to SSM - hybrid environments
+# https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-managedinstances.html
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#         Maintenance Windows
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Schedule instance maintenance and other disruptive tasks for a specific time window,
+# and execute those tasks fleet-wide from a central location.
+
+# You must add IAM Role to EC2 instances (maintenance) with different Trust relationships:
+# https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-maintenance-perm-console.html
+
+# Create time window -> Create target -> Register tasks(run commands, lambda, automation)
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#             Parameter Store
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Centralized storage and management of your secrets and configuration data such as passwords,
+# database strings, and license codes. You can encrypt values, or store as plain text.
+
+export DBPASSWORD=`aws ssm get-parameters --name DBpassword --region us-east-1 --with-decryption --output text --query Parameters[].Value`
+export DBUSERNAME=`aws ssm get-parameters --name DBusername --region us-east-1 --output text --query Parameters[].Value`
+export DBENDPOINT=`aws ssm get-parameters --name DBendpoint --region us-east-1 --output text --query Parameters[].Value`
+
+# Simple policy of IAM Role for EC2
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "ssm:GetParameters",
+            "Resource": "*"
+        }
+    ]
+}
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                                Route 53
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# DNS management: You can create host zones using the current AWS account
+# Traffic management: You can use traffic flow and create traffic policy records
+# Availability monitoring: Use health checking to monitor the status of your resources, work with SNS
+# Domain registration
