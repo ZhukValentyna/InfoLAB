@@ -16,6 +16,8 @@ AWS Secret Access Key
 Default region name
 Default output format
 
+# Calculate your infrastructure
+# https://calculator.s3.amazonaws.com/index.html?key=calc-66EED67E-8369-42F2-A19F-495BE8840EE6
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #                   IAM -  Identity and Access Management
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -144,6 +146,13 @@ aws s3 sync . s3://name.name                  - Synchronization the current dire
 # 7. Throughput Optimized HDD (ST1)   - performance is measured in throughput (MiB/s)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# AWS - Lifecycle Manager
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Used to make backup/snapshots of EC2 Disks
+# EC2 Disk = EBS volume
+# EBS volume backup = EBS snapshot
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Данные о Сервере EC2 - http://169.254.169.254/latest/meta-data/
 a= `curl http://169.254.169.254/latest/meta-data/.... `
 echo $a
@@ -161,6 +170,28 @@ echo $a
 # 2. Network Load Balancers
 # 3. Gateway Load Balancers
 # 4. Classic Load Balancers
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#      Application Load Balancer
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Wort at OSI Model Layer 7
+# HTTP/HTTPS (or Layer 7) Traffic
+# Listeners configured on ALB
+# EC2 Registered with TargetGroups only and not within Load Balancer
+
+# Content-based routing per rules:
+  * Host: app1.testlab.ml
+  * Path: www.testlab.ml/forum
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#      Network Load Balancer
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# TCP (or Layer 4) traffic
+# Listeners configured on NLB
+# EC2 Registered with TargetGroups only and not within Load Balancer
+# If you need SSL, you need to configure it on EC2
+
+# Port-based routing only
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #      Auto Scaling Group
@@ -368,3 +399,82 @@ export DBENDPOINT=`aws ssm get-parameters --name DBendpoint --region us-east-1 -
 # Traffic management: You can use traffic flow and create traffic policy records
 # Availability monitoring: Use health checking to monitor the status of your resources, work with SNS
 # Domain registration
+
+# Routing policy:
+  * Failover routing policy – Use when you want to configure active-passive failover.
+  * Geolocation routing policy – Use when you want to route traffic
+    based on the location of your users.
+  * Geoproximity routing policy – Use when you want to route traffic based on the location of your
+    resources and, optionally, shift traffic from resources in one location to resources in another.
+  * Latency routing policy – Use when you have resources in multiple AWS Regions
+    and you want to route traffic to the region that provides the best latency.
+  * IP-based routing policy – Use when you want to route traffic based on the location of your users,
+    and have the IP addresses that the traffic originates from.
+  * Multivalue answer routing policy – Use when you want Route 53 to respond to DNS queries
+    with up to eight healthy records selected at random.
+  * Weighted routing policy – Use to route traffic to multiple resources in proportions that you specify.
+  * Simple routing policy – Use for a single resource that performs a given function for your domain
+
+# Make Cross Region Load Balancer with weighted or latency routing policy. Use with health checking
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                               Directory Services
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  * Simple AD
+  * Managed Microsoft AD
+  * AD Connector
+  * Amazon Cognito
+  * CloudDirectory
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#              Simple AD
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# standalone managed directory that is powered by a Samba 4 Active Directory Compatible Server.
+# It is available in two sizes:
+  * Small ~ 500 users (approximately 2,000 objects including users, groups, and computers).
+  * Large ~ 5000 users (approximately 20,000 objects including users, groups, and computers).
+
+# Simple AD does not support features:
+ * multi-factor authentication (MFA)
+ * trust relationships with other domains
+ * Active Directory Administrative Center
+ * PowerShell support
+ * Active Directory recycle bin
+ * group managed service accounts
+ * schema extensions for POSIX and Microsoft applications.
+
+# For join domain EC2 needs IAM Role (SSM Policy)
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#         Managed Microsoft AD
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Powered by Windows Server 2012 R2. Created as a highly available pair of domain controllers connected to your VPC.
+# It is available in two editions:
+  * Standard Edition - designed to support 5000 employees (approximately 30,000 objects including users, groups, and computers).
+  * Enterprise Edition - designed to support 500,000 directory objects
+
+# Support FSx - Highly available shared disk for Windows and Linux
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                     EFS - Amazon Elastic File System
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Highly available shared disk for Linux (Type NFS port 2049)
+
+#Encryption In Transit Disabled
+
+sudo yum install amazon-efs-utils
+sudo mkdir /efs-disk
+sudo mount -t efs fs-xxxyyyid(file system ID):/ /efs-disk
+sudo echo "fs-xxxyyyid:/ /efs-disk efs defaults,_netdev 0 0" >> /etc/fstab    - enable automount
+sudo mount -l                                                                 - list
+
+#Encryption In Transit Enables
+
+sudo yum install amazon-efs-utils
+sudo mkdir /efs-disk
+sudo mount -t efs -o tls fs-xxxyyyid(file system ID):/ /efs-disk
+sudo echo "fs-xxxyyyid:/ /efs-disk efs tls,_netdev 0 0" >> /etc/fstab
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#                           Elastic Container Service
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -37,6 +37,16 @@ chkconfig httpd on
 echo ">>>>>>>>>>>>>>>>>>>> END SCRIPT <<<<<<<<<<<<<<<<<<<<<<"
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#!/bin/bash
+echo ">>>>>>>>>>>>>>>>>>>> START SCRIPT <<<<<<<<<<<<<<<<<<<<<<"
+yum -y update
+yum install -y amazon-efs-utils
+mkdir /efs-disk
+mount -t efs fs-xxxyyyid:/ /efs-disk
+echo "fs-xxxyyyid:/ /efs-disk efs defaults,_netdev 0 0" >> /etc/fstab
+echo ">>>>>>>>>>>>>>>>>>>> END SCRIPT <<<<<<<<<<<<<<<<<<<<<<"
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #                   Examples of Bootstrapping for Windows
 # LogFile  : Windows 2016: C:\ProgramData\Amazon\EC2-Windows\Launch\UserdataExecution.log
 #           Windows 2012: C:\Program Files\Amazon\Ec2ConfigService\Logs\Ec2ConfigLog.txt
